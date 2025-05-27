@@ -12,6 +12,13 @@ router.get('/', basicAccess, (req, res) => {
 });
 
 router.get('/health', basicAccess, (req, res) => {
+  let tier = UserTier.FREE;
+  if (req.cookies.Authorization) {
+    const token = req.cookies.Authorization.split(' ')[1];
+    const validation = JwtManager.verifyToken(token);
+    tier = validation.payload?.tier || UserTier.FREE;
+  }
+
   res.send({
     name: packageJson.name,
     version: packageJson.version,
@@ -19,6 +26,7 @@ router.get('/health', basicAccess, (req, res) => {
     timestamp: new Date().toISOString(),
     startupTime: new Date(new Date().getTime() - process.uptime() * 1000),
     uptime: process.uptime(),
+    tier,
   });
 });
 
@@ -29,7 +37,22 @@ router.get(
   (req, res) => {
     const { tier } = req.params;
     const token = JwtManager.generateToken(tier as UserTier);
-    res.json({ token });
+
+    if (token) {
+      res.cookie('Authorization', 'Bearer ' + token, {
+        httpOnly: true,
+        secure: process.env.PRODUCTION === 'production',
+        sameSite: process.env.PRODUCTION === 'production' ? 'none' : 'lax',
+        maxAge: 30 * 60 * 1000,
+        path: '/',
+      });
+    }
+
+    res.json({
+      message: token
+        ? 'Token set as cookie and returned'
+        : 'Free tier - no token needed',
+    });
   }
 );
 

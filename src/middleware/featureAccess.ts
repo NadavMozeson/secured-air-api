@@ -4,9 +4,11 @@ import JwtManager, { UserTier } from '../utils/jwtManager';
 const requireFeature = (featureId: string) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const authHeader = req.headers.authorization;
-    const token = authHeader?.startsWith('Bearer ')
-      ? authHeader.slice(7)
-      : null;
+    let token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+    if (!token && req.cookies?.auth_token) {
+      token = req.cookies.auth_token;
+    }
 
     let userTier = UserTier.FREE;
 
