@@ -1,6 +1,9 @@
 import express from 'express';
 import packageJson from '../../package.json';
 import { basicAccess } from '../middleware/featureAccess';
+import JwtManager, { UserTier } from '../utils/jwtManager';
+import { validateData } from '../middleware/validationMiddleware';
+import { tokenCreateSchema } from './types';
 
 const router = express.Router();
 
@@ -18,5 +21,16 @@ router.get('/health', basicAccess, (req, res) => {
     uptime: process.uptime(),
   });
 });
+
+router.get(
+  '/token/:tier',
+  basicAccess,
+  validateData(tokenCreateSchema, 'params'),
+  (req, res) => {
+    const { tier } = req.params;
+    const token = JwtManager.generateToken(tier as UserTier);
+    res.json({ token });
+  }
+);
 
 export default router;
