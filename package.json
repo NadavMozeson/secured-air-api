@@ -1,0 +1,41 @@
+{
+  "name": "secured-air-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "tsc && npx cpx \"src/**/*.json\" dist/src",
+    "start": "node dist/src/app.js",
+    "lint": "eslint \"{src,tests}/**/*.{ts,js}\"",
+    "lint:fix": "eslint \"{src,tests}/**/*.{ts,js}\" --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NadavMozeson/secured-air-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/NadavMozeson/secured-air-api/issues"
+  },
+  "homepage": "https://github.com/NadavMozeson/secured-air-api#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.21",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "prettier": "^3.5.3",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  }
+}
