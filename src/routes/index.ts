@@ -1,13 +1,14 @@
 import express from 'express';
 import packageJson from '../../package.json';
+import { basicAccess } from '../middleware/featureAccess';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', basicAccess, (req, res) => {
   res.send('Welcome to Secured Air API');
 });
 
-router.get('/health', (req, res) => {
+router.get('/health', basicAccess, (req, res) => {
   res.send({
     name: packageJson.name,
     version: packageJson.version,
